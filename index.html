@@ -5,9 +5,52 @@
 </head>
 <body>
     <h1>Upload a File</h1>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" />
+    <form id="uploadForm">
+        <input type="file" id="fileInput" />
         <button type="submit">Upload</button>
     </form>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select a file');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const fileContent = e.target.result.split(',')[1]; 
+                
+                try {
+                    const response = await fetch('/upload', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            filename: file.name,
+                            content: fileContent
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        alert('File uploaded successfully');
+                    } else {
+                        alert('Failed to upload file');
+                    }
+                } catch (error) {
+                    console.error(error);
+                    alert('An error occurred while uploading the file');
+                }
+            };
+            
+            reader.readAsDataURL(file);
+        });
+    </script>
 </body>
 </html>
