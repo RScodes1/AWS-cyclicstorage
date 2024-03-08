@@ -1,9 +1,10 @@
 const express = require('express');
 const app = express();
 const AWS = require("aws-sdk");
-const s3 = new AWS.S3();
+const s3 = new AWS.S3()
 const bodyParser = require('body-parser');
 require('dotenv').config()
+
 
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
@@ -45,8 +46,6 @@ app.post('/upload', async (req, res) => {
         Bucket: "cyclic-gray-bewildered-yak-ap-northeast-1",
         Key: "some_files/my_file.json",
     }).promise()
-
-    console.log(JSON.parse(my_file))
     res.send('File uploaded successfully').end();
   } catch (error) {
     console.log(error);
