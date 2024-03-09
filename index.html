@@ -1,56 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>File Upload Form</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Upload and Delete</title>
 </head>
 <body>
-    <h1>Upload a File</h1>
-    <form id="uploadForm">
-        <input type="file" id="fileInput" />
+    <h1>Upload Photo</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="photo">
         <button type="submit">Upload</button>
     </form>
 
-    <script>
-        document.getElementById('uploadForm').addEventListener('submit', async (event) => {
-            event.preventDefault();
-            
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
-            
-            if (!file) {
-                alert('Please select a file');
-                return;
-            }
-            
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                const fileContent = e.target.result.split(',')[1]; 
-                
-                try {
-                    const response = await fetch('/upload', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            filename: file.name,
-                            content: fileContent
-                        })
-                    });
-                    
-                    if (response.ok) {
-                        alert('File uploaded successfully');
-                    } else {
-                        alert('Failed to upload file');
-                    }
-                } catch (error) {
-                    console.error(error);
-                    alert('An error occurred while uploading the file');
-                }
-            };
-            
-            reader.readAsDataURL(file);
-        });
-    </script>
+    <hr>
+
+    <h1>Delete Photo</h1>
+    <form action="/delete" method="post">
+        <label for="photoKey">Photo Key:</label>
+        <input type="text" id="photoKey" name="photoKey" placeholder="Enter photo key">
+        <button type="submit">Delete</button>
+    </form>
 </body>
-</html>
